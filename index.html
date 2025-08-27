@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#003399" />
+  <title>Gerenciador Coopex – Cartão Futurista</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --brand:#003399;        /* azul‑royal COOPEX */
+      --brand-2:#4f8cff;      /* azul claro */
+      --ink:#0b1838;          /* texto principal */
+      --muted:#6073a8;        /* texto secundário */
+      --bg-1:#ffffff;         /* branco predominante */
+      --bg-2:#f6f9ff;         /* leve azul */
+      --line:#e2e9ff;         /* linhas sutis */
+      --card:#ffffff;
+      --radius:26px;
+      --glow:0 18px 48px rgba(0,51,153,.18), 0 4px 14px rgba(0,51,153,.10);
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0}
+    html{height:auto;min-height:100%}
+    body{
+      font-family:Inter,system-ui,Arial,sans-serif;color:var(--ink);min-height:100dvh;overflow-y:auto;touch-action:pan-y;
+      background:radial-gradient(1200px 800px at 10% -10%, #eaf0ff 0%, transparent 60%),
+                 linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      position:relative;
+    }
+    body::before{ /* grade leve futurista */
+      content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;
+      background-image:linear-gradient(transparent 95%, rgba(0,51,153,.06) 95%),
+                       linear-gradient(90deg, transparent 95%, rgba(0,51,153,.06) 95%);
+      background-size:12px 12px;
+    }
+
+    /* Topo */
+    .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#ffffffcc,#ffffffaa);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:560px;margin:0 auto;padding:12px 14px;display:flex;align-items:center;gap:12px}
+    .logo-badge{width:44px;height:44px;border-radius:50%;background:conic-gradient(from 130deg at 50% 50%, #2563eb, var(--brand));display:grid;place-items:center;color:#fff;font-family:Orbitron,sans-serif;font-weight:700;letter-spacing:.4px;overflow:hidden;box-shadow:0 12px 28px rgba(0,51,153,.25)}
+    .logo-badge img{width:100%;height:100%;object-fit:cover;display:none}
+    .app-title{font-family:Orbitron,sans-serif;font-weight:700;letter-spacing:.8px}
+    .spacer{flex:1}
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:#eef3ff;border:1px solid var(--line);font-size:.9rem;color:#123}
+
+    /* Conteúdo */
+    .wrap{max-width:560px;margin:18px auto 140px;padding:0 14px}
+
+    /* Cartão principal com aro de luz */
+    .card{position:relative;border-radius:30px;overflow:hidden}
+    .card::before{content:"";position:absolute;inset:-2px;background:linear-gradient(180deg,#ffffff,#e9f0ff);filter:blur(8px)}
+    .card > .inner{position:relative;background:var(--card);border:1px solid var(--line);border-radius:30px;box-shadow:var(--glow);overflow:hidden}
+
+    .hero{padding:32px 22px 20px;text-align:center;background:linear-gradient(180deg,#ffffff 0%, #f1f6ff 100%);position:relative}
+    .hero::after{ /* faixas inclinadas motofrete */
+      content:"";position:absolute;inset:auto -30% -40% -30%;height:160px;background:repeating-linear-gradient(135deg, rgba(0,51,153,.08) 0 14px, rgba(0,51,153,.0) 14px 28px);
+    }
+    /* LOGO SUPERIOR (GRANDE E REDONDA) */
+    .moto-badge{width:128px;height:128px;border-radius:50%;margin:0 auto 12px;position:relative;box-shadow:0 0 0 8px #fff, 0 0 0 16px rgba(0,51,153,.12), 0 20px 40px rgba(0,51,153,.35);overflow:hidden;background:radial-gradient(circle at 30% 30%, #4f8cff 0, #003399 70%);display:grid;place-items:center}
+    .moto-badge img{width:100%;height:100%;object-fit:cover;display:none}
+    .moto-fallback{width:64px;height:64px;color:#fff;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+    .name{font-weight:800;font-size:1.35rem;margin:6px 0 0}
+    .handle{margin:.35rem 0 0;color:var(--muted)}
+
+    /* Quadro de Aviso */
+    .notice{margin:16px 16px 0;background:linear-gradient(180deg,#f6f9ff,#ffffff);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 28px rgba(0,51,153,.08)}
+    .notice-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px dashed var(--line);font-weight:800;letter-spacing:.3px}
+    .notice-head .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#4f8cff,#003399);box-shadow:0 0 0 3px rgba(0,51,153,.12)}
+    .notice-body{padding:12px 14px;color:#112c60}
+
+    /* Ações */
+    .cta-list{padding:16px}
+    .cta{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;text-decoration:none;color:#0b1838;font-weight:800;margin-bottom:12px;box-shadow:0 10px 26px rgba(0,51,153,.08)}
+    .cta:active{transform:scale(.99)}
+    .icon{width:22px;height:22px;display:grid;place-items:center;color:var(--brand)}
+
+    /* Galeria */
+    .gallery{padding:0 16px 16px}
+    .gallery h4{margin:10px 0}
+    .video-row{display:flex;gap:12px;overflow:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+    .video-thumb{min-width:220px;flex:0 0 220px;border-radius:16px;border:1px solid var(--line);overflow:hidden;background:#000;box-shadow:0 12px 28px rgba(0,0,0,.15)}
+    .video-thumb img{width:100%;height:124px;object-fit:cover;display:block}
+    .video-thumb .vt-title{padding:8px 10px;font-size:.92rem;background:#fff;font-weight:700}
+
+    .footer{padding:18px 0 12px;text-align:center;color:var(--muted);font-size:.9rem}
+    .credits{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+    .round-logo{width:64px;height:64px;border-radius:50%;background:#fff;border:1px solid var(--line);overflow:hidden;box-shadow:0 8px 20px rgba(0,51,153,.08)}
+    .round-logo img{width:100%;height:100%;object-fit:cover}
+    .madeby{color:#203a88;font-weight:800;letter-spacing:.3px}
+    .tagline{margin-top:10px;color:var(--muted)}
+
+    /* FABs */
+    .fabs{position:fixed;right:14px;bottom:18px;display:grid;gap:12px;z-index:60}
+    .fab{width:60px;height:60px;border-radius:16px;display:grid;place-items:center;font-size:22px;box-shadow:0 18px 40px rgba(0,51,153,.22)}
+    .fab.blue{background:linear-gradient(135deg,var(--brand),#1e40af);color:#fff;border:0}
+    .fab.light{background:#ffffff;border:1px solid var(--line);color:#1a2c5c}
+
+    /* Modais */
+    .modal{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;z-index:100}
+    .modal.open{display:flex}
+    .modal .back{position:absolute;inset:0;background:rgba(4,15,40,.35)}
+    .dialog{position:relative;width:100%;max-width:580px;background:var(--card);border:1px solid var(--line);border-radius:18px 18px 0 0;box-shadow:0 -10px 40px rgba(16,27,70,.15);max-height:calc(100dvh - 24px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+    .dlg-head{position:sticky;top:0;background:#fff;padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;z-index:1}
+    .dlg-head h4{margin:0;font-size:1rem}
+    .dlg-body{padding:14px 16px;display:grid;gap:12px}
+    .dlg-foot{position:sticky;bottom:0;background:#fff;padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+
+    .field{display:grid;gap:6px}
+    .field label{font-size:.95rem;color:var(--muted)}
+    .field input[type="text"], .field input[type="url"], .field input[type="password"], .field input[type="file"], .field textarea, .field select{
+      width:100%;background:#f7faff;border:1px solid #d9e3ff;color:#0f172a;padding:12px;border-radius:14px;outline:none
+    }
+    .hint{font-size:.86rem;color:var(--muted)}
+
+    .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0e1a33;border:1px solid #203259;padding:10px 14px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0;transition:.2s;color:#fff;z-index:120}
+    .toast.show{opacity:1}
+    .hide{display:none!important}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo-badge" id="logoBadge"><img id="logoImg" alt="Logo Coopex"><span>CO</span></div>
+      <div class="app-title">COOPEX • CARTÃO</div>
+      <div class="spacer"></div>
+      <div id="themeChip" class="chip">✏️ editar</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="inner">
+        <div class="hero">
+          <!-- LOGO SUPERIOR GRANDE (redonda) -->
+          <div class="moto-badge" aria-label="Logo principal">
+            <img id="topLogoImg" alt="Logo principal">
+            <!-- fallback se não tiver logo -->
+            <svg class="moto-fallback" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 14a8 8 0 0 1 8-8h2c2.7 0 5 2.3 5 5v1l2 2-2 1H14a5 5 0 0 1-5 3H7l-3-4Z" stroke="#fff"/>
+              <path d="M13 8h4l2 2" stroke="#dbeafe"/>
+            </svg>
+          </div>
+          <h2 class="name" id="profileName">Coopex Motofrete</h2>
+          <div class="handle" id="profileHandle">@coopex</div>
+        </div>
+
+        <!-- Quadro de Aviso -->
+        <div class="notice hide" id="noticeBox">
+          <div class="notice-head"><span class="dot"></span> QUADRO DE AVISO</div>
+          <div class="notice-body" id="noticeText"></div>
+        </div>
+
+        <div class="cta-list" id="ctaList"><!-- botões --></div>
+
+        <div class="gallery hide" id="galleryWrap">
+          <h4>Mídia</h4>
+          <div class="video-row" id="videoRow"><!-- thumbs --></div>
+        </div>
+
+        <div class="footer">
+          <div class="credits">
+            <div class="round-logo" id="brandLogoCoopex"><img id="brandImgCoopex" alt="Logo Coopex"/></div>
+            <div class="madeby">Desenvolvido por <b>Kratos System</b></div>
+            <div class="round-logo" id="brandLogoKratos"><img id="brandImgKratos" alt="Logo Kratos"/></div>
+          </div>
+          <div class="tagline">Orgulho de ser <b>COOPEX</b> — desde 2002</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="fabs">
+    <button class="fab blue" id="btnEdit" title="Editar">✏️</button>
+    <button class="fab light" id="btnShare" title="Compartilhar">🔗</button>
+    <button class="fab light" id="btnMore" title="Mais">⋯</button>
+  </div>
+
+  <!-- Modal Edição -->
+  <div class="modal" id="modalEdit">
+    <div class="back" data-close></div>
+    <div class="dialog">
+      <div class="dlg-head"><h4>Editar cartão</h4><button class="chip" data-close>Fechar</button></div>
+      <div class="dlg-body">
+        <div class="field"><label>Nome</label><input id="fName" type="text" placeholder="Ex.: Coopex Motofrete"></div>
+        <div class="field"><label>Usuário/Handle</label><input id="fHandle" type="text" placeholder="@coopex"></div>
+        <div class="field"><label>Logo superior (Coopex) — redonda</label><input id="fTopLogo" type="file" accept="image/*"></div>
+        <div class="field"><label>Logo rodapé Coopex — redonda</label><input id="fBrandCoopex" type="file" accept="image/*"></div>
+        <div class="field"><label>Logo rodapé Kratos — redonda</label><input id="fBrandKratos" type="file" accept="image/*"></div>
+        <div class="field"><label>QUADRO DE AVISO (texto)</label><textarea id="fNotice" rows="3" placeholder="Ex.: Horário especial neste feriado..."></textarea></div>
+        <div class="field"><label>Exibir QUADRO DE AVISO?</label>
+          <select id="fShowNotice">
+            <option value="no">Não</option>
+            <option value="yes">Sim</option>
+          </select>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--line);margin:6px 0 0">
+        <div class="hint">Links (até 4). Informe o texto do botão e a URL.</div>
+        <div id="linksWrap"><!-- rows --></div>
+        <button class="chip" id="btnAddLink">＋ adicionar link</button>
+        <hr style="border:none;border-top:1px solid var(--line);margin:10px 0 0">
+        <div class="hint">Vídeos (YouTube, MP4 externo ou MP4 na pasta <code>assets/</code>). Preencha e toque em "Adicionar".</div>
+        <div class="field"><label>URL do YouTube</label><input id="fYT" type="url" placeholder="https://youtu.be/..."></div>
+        <div class="field"><label>Upload .mp4 (local)</label><input id="fMP4" type="file" accept="video/mp4"></div>
+        <div class="btn-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <button class="chip" id="btnAddVideo">Adicionar vídeo</button>
+          <button class="chip" id="btnClearVideos">Limpar vídeos</button>
+        </div>
+      </div>
+      <div class="dlg-foot">
+        <button class="chip" data-close>Cancelar</button>
+        <button class="chip" id="btnSave">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Mais + Firebase -->
+  <div class="modal" id="modalMore">
+    <div class="back" data-close></div>
+    <div class="dialog">
+      <div class="dlg-head"><h4>Opções & Firebase</h4><button class="chip" data-close>Fechar</button></div>
+      <div class="dlg-body">
+        <div class="btn-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+          <button class="chip" id="btnExport">⤴️ Exportar backup</button>
+          <label class="chip" for="importFile" style="cursor:pointer">⤵️ Importar backup</label>
+        </div>
+        <div class="field"><label>Firebase – Email</label><input id="fEmail" type="text" placeholder="admin@coopex.com.br"></div>
+        <div class="field"><label>Firebase – Senha</label><input id="fPass" type="password" placeholder="••••••••"></div>
+        <div class="btn-row" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px">
+          <button class="chip" id="btnLogin">Entrar</button>
+          <button class="chip" id="btnLogout">Sair</button>
+          <button class="chip" id="btnFirebaseSave">Salvar no Firebase</button>
+        </div>
+        <div class="hint" id="authHint">Status: offline</div>
+        <div class="hint">Limites Spark – Firestore: 50k leituras/dia, 20k gravações/dia, 20k deleções/dia, 1 GiB armazenado, 10 GiB/mês de egress.</div>
+        <button class="chip" id="btnReset">🧹 Limpar tudo</button>
+      </div>
+    </div>
+  </div>
+
+  <input id="importFile" type="file" accept="application/json" class="hide" />
+  <div class="toast" id="toast"></div>
+
+<script>
+// ===== util & estado local =====
+const $=(s,r=document)=>r.querySelector(s);const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const toast=(m)=>{const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)};
+const toB64=(f)=>new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(f)});
+
+const LS='coopex.card.v3';
+let state={
+  profile:{
+    name:'Coopex Motofrete',
+    handle:'@coopex',
+    topLogo:null,
+    brandCoopex:null,
+    brandKratos:null,
+    showNotice:true,
+    notice:'Operação normal hoje. Segurança em primeiro lugar!'
+  },
+  links:[{label:'WhatsApp',url:'',icon:'wa'},{label:'Sistema 1',url:'' ,icon:'link'},{label:'Sistema 2',url:'',icon:'link'},{label:'YouTube',url:'',icon:'yt'}],
+  // vídeos: {type:'yt', id}, {type:'mp4', b64, title}, {type:'mp4url', src, poster, title}
+  videos:[]
+};
+window.state = state; // torna acessível ao script module
+
+function save(){ localStorage.setItem(LS,JSON.stringify(state)); window.state = state; }
+function load(){ try{const s=JSON.parse(localStorage.getItem(LS)); if(s) state=s;}catch{} window.state = state; renderAll(); }
+
+// icons inline
+const icons={
+  wa:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M20.5 12a8.5 8.5 0 1 1-15.7 4.6L3 21l4.6-1.8A8.5 8.5 0 0 1 20.5 12Z" stroke="currentColor" stroke-width="1.5"/><path d="M8.8 9.4c-.1-.3.1-.6.4-.8l.5-.3c.2-.1.5 0 .6.1l.7 1a.7.7 0 0 1 0 .7c-.2.2-.3.4-.2.6.2.6.9 1.5 1.7 2 .2.1.5.1.7-.1l.6-.5c.2-.1.5-.1.7 0l.9.4c.3.1.4.4.3.7l-.2.6c-.1.3-.4.6-.8.7-1.6.4-3.5-.3-5-1.7-1.5-1.5-2.1-3.3-1.8-4.8.1-.3.4-.7.7-.9Z" fill="currentColor"/></svg>`,
+  ig:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></svg>`,
+  fb:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M13.5 21v-8h2.3l.4-3h-2.7V8.1c0-.9.3-1.5 1.6-1.5h1.2V4.1c-.2 0 -.9-.1-1.8-.1-2.1 0-3.6 1.3-3.6 3.7V10H9v3h2.9v8h1.6Z" fill="currentColor"/></svg>`,
+  yt:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M22 12s0-3.5-.4-4.9c-.2-.8-.9-1.5-1.7-1.7C17.5 5 12 5 12 5s5.5 0 7.9.4c.8-.2 1.5-.9 1.7-1.7.4-1.4.4-4.9.4-4.9Z" stroke="currentColor"/><path d="M10 9.75v4.5L14.5 12 10 9.75Z" fill="currentColor"/></svg>`,
+  link:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M10 14 14 10" stroke="currentColor" stroke-width="1.7"/><path d="M7.5 16.5a4 4 0 0 1 0-5.7l1.8-1.8a4 4 0 0 1 5.7 0" stroke="currentColor" stroke-width="1.7"/><path d="M16.5 7.5a4 4 0 0 1 0 5.7l-1.8 1.8a4 4 0 0 1-5.7 0" stroke="currentColor" stroke-width="1.7"/></svg>`
+};
+
+function renderProfile(){
+  $('#profileName').textContent=state.profile.name||'—';
+  $('#profileHandle').textContent=state.profile.handle||'';
+  const top=$('#topLogoImg'); const fb=$('.moto-fallback');
+  if(state.profile.topLogo){ top.src=state.profile.topLogo; top.style.display='block'; fb.style.display='none'; }
+  else { top.removeAttribute('src'); top.style.display='none'; fb.style.display='block'; }
+  const c=$('#brandImgCoopex'); const k=$('#brandImgKratos');
+  if(state.profile.brandCoopex){ c.src=state.profile.brandCoopex; } else { c.removeAttribute('src'); }
+  if(state.profile.brandKratos){ k.src=state.profile.brandKratos; } else { k.removeAttribute('src'); }
+}
+function renderNotice(){ const box=$('#noticeBox'); const txt=$('#noticeText'); if(state.profile.showNotice && state.profile.notice){ box.classList.remove('hide'); txt.textContent=state.profile.notice; } else { box.classList.add('hide'); txt.textContent=''; } }
+function renderLinks(){ const host=$('#ctaList'); host.innerHTML=''; state.links.filter(l=>l.label && (l.url||'').trim()!=='').slice(0,4).forEach(l=>{ const a=document.createElement('a'); a.className='cta'; a.href=l.url; a.target='_blank'; const i=document.createElement('span'); i.className='icon'; i.innerHTML=icons[l.icon]||icons.link; const t=document.createElement('span'); t.textContent=l.label; a.append(i,t); host.append(a); }); }
+function ytThumb(id){ return `https://img.youtube.com/vi/${id}/hqdefault.jpg`; }
+function parseYT(url){ try{const u=new URL(url); if(u.hostname.includes('youtu.be')) return u.pathname.slice(1); if(u.searchParams.get('v')) return u.searchParams.get('v'); const m=u.pathname.match(/\/embed\/([\w-]+)/); if(m) return m[1]; }catch{} return null; }
+function renderVideos(){ const wrap=$('#galleryWrap'); const row=$('#videoRow'); row.innerHTML=''; if(!state.videos.length){ wrap.classList.add('hide'); return; } wrap.classList.remove('hide'); state.videos.forEach(v=>{ const card=document.createElement('div'); card.className='video-thumb'; if(v.type==='yt'){ const img=document.createElement('img'); img.src=ytThumb(v.id); img.alt='thumb'; card.append(img); }
+  else { const img=document.createElement('img'); img.src=(v.poster||'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180"><rect width="100%" height="100%" fill="#000"/></svg>')); img.alt='thumb'; card.append(img); }
+  const title=document.createElement('div'); title.className='vt-title'; title.textContent=v.title|| (v.type==='yt'?'YouTube':'Vídeo'); card.append(title); card.addEventListener('click',()=>openVideo(v)); row.append(card); }); }
+function openVideo(v){ const w=window.open(); if(v.type==='yt'){ w.document.write(`<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${v.id}" frameborder="0" allowfullscreen style="position:fixed;inset:0"></iframe>`); }
+  else if(v.type==='mp4url'){ w.document.write(`<video src="${v.src}" controls autoplay style="position:fixed;inset:0;width:100%;height:100%;background:#000;object-fit:contain" ${v.poster?`poster='${v.poster}'`:''}></video>`); }
+  else { w.document.write(`<video src="${v.b64}" controls autoplay style="position:fixed;inset:0;width:100%;height:100%;background:#000;object-fit:contain"></video>`); } }
+
+function buildLinksEditor(){ const host=$('#linksWrap'); host.innerHTML=''; state.links.forEach((l,idx)=>{ const row=document.createElement('div'); row.className='field'; row.innerHTML=`<label>Link ${idx+1}</label><input data-i="${idx}" data-k="label" type="text" placeholder="Texto" value="${l.label||''}" style="margin-bottom:6px"><input data-i="${idx}" data-k="url" type="url" placeholder="https://" value="${l.url||''}"><div class="hint">Ícone: <select data-i="${idx}" data-k="icon"><option value="wa" ${l.icon==='wa'?'selected':''}>WhatsApp</option><option value="ig" ${l.icon==='ig'?'selected':''}>Instagram</option><option value="fb" ${l.icon==='fb'?'selected':''}>Facebook</option><option value="yt" ${l.icon==='yt'?'selected':''}>YouTube</option><option value="link" ${l.icon==='link'?'selected':''}>Genérico</option></select></div>`; host.append(row); }); }
+
+function renderAll(){ renderProfile(); renderNotice(); renderLinks(); renderVideos(); buildLinksEditor(); }
+
+// ===== CONFIG por arquivo (sem BD) =====
+async function applyConfigIfNoLocal(){
+  const hadLS=!!localStorage.getItem(LS);
+  if(hadLS){ return; }
+  try{
+    const res=await fetch('config.json',{cache:'no-store'});
+    if(!res.ok) return; const cfg=await res.json();
+    if(cfg.profile){ const p=cfg.profile; Object.assign(state.profile, {
+      name:p.name||state.profile.name,
+      handle:p.handle||state.profile.handle,
+      topLogo:p.topLogoUrl||state.profile.topLogo,
+      brandCoopex:p.brandCoopexUrl||state.profile.brandCoopex,
+      brandKratos:p.brandKratosUrl||state.profile.brandKratos,
+      showNotice: typeof p.showNotice==='boolean'?p.showNotice:state.profile.showNotice,
+      notice:p.notice||state.profile.notice
+    }); }
+    if(Array.isArray(cfg.links)) state.links=cfg.links;
+    if(Array.isArray(cfg.videos)) state.videos=cfg.videos;
+    save(); renderAll();
+  }catch(e){ /* silencioso */ }
+}
+
+// ===== Botões básicos =====
+$('#btnEdit').addEventListener('click',()=>{ $('#fName').value=state.profile.name; $('#fHandle').value=state.profile.handle; $('#fNotice').value=state.profile.notice; $('#fShowNotice').value=state.profile.showNotice?'yes':'no'; openModal('#modalEdit'); });
+$('#btnSave').addEventListener('click',()=>{ state.profile.name=$('#fName').value.trim()||'Coopex Motofrete'; state.profile.handle=$('#fHandle').value.trim(); state.profile.notice=$('#fNotice').value.trim(); state.profile.showNotice=$('#fShowNotice').value==='yes'; $$('#linksWrap [data-i]').forEach(inp=>{ const i=+inp.getAttribute('data-i'); const k=inp.getAttribute('data-k'); state.links[i][k]=inp.value; }); save(); renderAll(); closeModal('#modalEdit'); toast('Salvo localmente.'); });
+
+$('#fTopLogo').addEventListener('change',async e=>{ const f=e.target.files[0]; if(!f) return; state.profile.topLogo=await toB64(f); save(); renderProfile(); toast('Logo superior atualizada.'); });
+$('#fBrandCoopex').addEventListener('change',async e=>{ const f=e.target.files[0]; if(!f) return; state.profile.brandCoopex=await toB64(f); save(); renderProfile(); toast('Logo Coopex (rodapé) atualizada.'); });
+$('#fBrandKratos').addEventListener('change',async e=>{ const f=e.target.files[0]; if(!f) return; state.profile.brandKratos=await toB64(f); save(); renderProfile(); toast('Logo Kratos (rodapé) atualizada.'); });
+
+$('#btnAddLink').addEventListener('click',()=>{ state.links.push({label:'Novo link',url:'',icon:'link'}); buildLinksEditor(); });
+
+$('#btnAddVideo').addEventListener('click', async ()=>{ const ytUrl=$('#fYT').value.trim(); const file=$('#fMP4').files[0]; if(ytUrl){ const id=parseYT(ytUrl); if(id){ state.videos.push({type:'yt', id, title:'YouTube'}); $('#fYT').value=''; toast('Vídeo do YouTube adicionado.'); } else { toast('URL do YouTube inválida.'); } }
+  if(file){ const b64=await toB64(file); state.videos.push({type:'mp4', b64, title:file.name}); $('#fMP4').value=''; toast('Vídeo MP4 local adicionado.'); }
+  save(); renderVideos(); });
+$('#btnClearVideos').addEventListener('click',()=>{ if(confirm('Remover todos os vídeos?')){ state.videos=[]; save(); renderVideos(); }});
+
+$('#btnShare').addEventListener('click',()=>{ if(navigator.share){ navigator.share({title:'Cartão Coopex', text:state.profile.name, url:location.href}).catch(()=>{});} else { navigator.clipboard.writeText(location.href); toast('Link copiado.'); } });
+$('#btnMore').addEventListener('click',()=> openModal('#modalMore'));
+$('#btnExport').addEventListener('click',()=>{ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='cartao_coopex_backup.json'; a.click(); URL.revokeObjectURL(a.href); });
+$('#importFile').addEventListener('change', async ev=>{ const f=ev.target.files[0]; if(!f) return; try{ const data=JSON.parse(await f.text()); state=data; save(); renderAll(); toast('Backup importado.'); }catch{ toast('JSON inválido.'); }});
+$('#btnReset').addEventListener('click',()=>{ if(confirm('Apagar dados locais?')){ localStorage.removeItem(LS); state={profile:{name:'Coopex Motofrete',handle:'@coopex',topLogo:null,brandCoopex:null,brandKratos:null,showNotice:true,notice:'Operação normal hoje. Segurança em primeiro lugar!'}, links:[{label:'WhatsApp',url:'',icon:'wa'},{label:'Sistema 1',url:'',icon:'link'},{label:'Sistema 2',url:'',icon:'link'},{label:'YouTube',url:'',icon:'yt'}], videos:[]}; save(); renderAll(); toast('Reset completo.'); }});
+
+function openModal(sel){ $(sel).classList.add('open'); }
+function closeModal(sel){ $(sel).classList.remove('open'); }
+$$('[data-close]').forEach(el=> el.addEventListener('click', e=> closeModal('#'+e.target.closest('.modal').id)));
+
+// boot básico
+load();
+applyConfigIfNoLocal();
+</script>
+
+<!-- ===== FIREBASE (v10 modular) – usar o projeto kratossystemlinks ===== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp /*, onSnapshot*/ } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA0nxRSImbagy4EbWgLD9_2Hr_PYtWVPnM",
+    authDomain: "kratossystemlinks.firebaseapp.com",
+    projectId: "kratossystemlinks",
+    storageBucket: "kratossystemlinks.firebasestorage.app",
+    messagingSenderId: "721987032189",
+    appId: "1:721987032189:web:9a82953e128b9398c04d14"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  const SITE_DOC = doc(db, 'sites', 'coopex-card');
+
+  const emailEl = document.getElementById('fEmail');
+  const passEl  = document.getElementById('fPass');
+  const hintEl  = document.getElementById('authHint');
+
+  onAuthStateChanged(auth, (user)=>{
+    if(user){ hintEl.textContent = `Status: logado como ${user.email}`; }
+    else { hintEl.textContent = 'Status: offline'; }
+  });
+
+  document.getElementById('btnLogin').addEventListener('click', async ()=>{
+    try{
+      await signInWithEmailAndPassword(auth, emailEl.value.trim(), passEl.value.trim());
+      document.getElementById('fPass').value='';
+      alert('Logado no Firebase.');
+    }catch(e){
+      alert('Falha no login: '+ (e.code||e.message));
+    }
+  });
+  document.getElementById('btnLogout').addEventListener('click', async ()=>{
+    await signOut(auth);
+    alert('Sessão encerrada.');
+  });
+
+  async function putDataURL(path, dataUrl){
+    const r = ref(storage, path);
+    await uploadString(r, dataUrl, 'data_url');
+    return await getDownloadURL(r);
+  }
+
+  document.getElementById('btnFirebaseSave').addEventListener('click', async ()=>{
+    try{
+      const payload = JSON.parse(JSON.stringify(window.state || {}));
+      const ts = Date.now();
+
+      if(payload.profile){
+        if(payload.profile.topLogo && payload.profile.topLogo.startsWith('data:')){
+          payload.profile.topLogo = await putDataURL(`logos/top_${ts}.png`, payload.profile.topLogo);
+        }
+        if(payload.profile.brandCoopex && payload.profile.brandCoopex.startsWith('data:')){
+          payload.profile.brandCoopex = await putDataURL(`logos/coopex_${ts}.png`, payload.profile.brandCoopex);
+        }
+        if(payload.profile.brandKratos && payload.profile.brandKratos.startsWith('data:')){
+          payload.profile.brandKratos = await putDataURL(`logos/kratos_${ts}.png`, payload.profile.brandKratos);
+        }
+      }
+
+      if(Array.isArray(payload.videos)){
+        for(let i=0;i<payload.videos.length;i++){
+          const v = payload.videos[i];
+          if(v.type==='mp4' && v.b64 && v.b64.startsWith('data:')){
+            const url = await putDataURL(`videos/v_${ts}_${i}.mp4`, v.b64);
+            payload.videos[i] = { type:'mp4url', src:url, poster:v.poster||null, title:v.title||'Vídeo' };
+          }
+        }
+      }
+
+      await setDoc(SITE_DOC, { state: payload, updatedAt: serverTimestamp() }, { merge:true });
+      alert('Dados salvos no Firebase.');
+    }catch(e){
+      console.error(e); alert('Erro ao salvar no Firebase.');
+    }
+  });
+
+  async function tryLoadFromFirebase(){
+    const hasLS = !!localStorage.getItem('coopex.card.v3');
+    try{
+      const snap = await getDoc(SITE_DOC);
+      if(snap.exists()){
+        const data = snap.data();
+        if(data && data.state && !hasLS){
+          window.state = data.state;
+          localStorage.setItem('coopex.card.v3', JSON.stringify(window.state));
+          // re-render com estado do Firebase
+          (function rerender(){
+            const evt = new Event('load');
+            // mas vamos só chamar as funções globais que existem:
+            if(window.renderAll){ window.state = data.state; state = data.state; window.state = state; localStorage.setItem('coopex.card.v3', JSON.stringify(state)); }
+            if(window.renderAll){ window.renderAll(); }
+          })();
+          alert('Dados carregados do Firebase.');
+        }
+      }
+    }catch(e){ /* ignora */ }
+  }
+
+  tryLoadFromFirebase();
+
+  // Live updates opcional:
+  // import { onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  // onSnapshot(SITE_DOC, (snap)=>{
+  //   if(snap.exists()){
+  //     const data = snap.data();
+  //     if(data && data.state){ window.state = data.state; localStorage.setItem('coopex.card.v3', JSON.stringify(window.state)); if(window.renderAll){ state = data.state; window.renderAll(); } }
+  //   }
+  // });
+</script>
+</body>
+</html>
