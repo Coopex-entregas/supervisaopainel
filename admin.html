@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin • COOPEX</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#003399;--line:#e2e9ff}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Arial}
+.header{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff}
+.badge{width:36px;height:36px;border-radius:50%;background:conic-gradient(from 130deg,#2563eb,#003399)}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+.card{border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}
+.row{display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:center;margin:8px 0}
+label{font-weight:800}
+input[type=text],input[type=url],input[type=email],input[type=password],textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px}
+textarea{min-height:80px}
+button{padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:#f5f8ff;font-weight:800;cursor:pointer}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.link-row{display:grid;grid-template-columns:1fr 1fr 160px 160px auto;gap:8px;align-items:center;margin:6px 0}
+.link-row input{width:100%}
+.link-row .thumb{display:flex;align-items:center;gap:6px}
+.small{color:#444;font-size:.9rem}
+hr{border:none;border-top:1px solid var(--line);margin:10px 0}
+.success{color:#0a7a2a;font-weight:700}
+.error{color:#a30000;font-weight:700}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="badge"></div><div><b>Admin • COOPEX</b><div class="small">Edite e salve — o público só visualiza pelo index</div></div>
+  <div style="margin-left:auto" id="authArea">
+    <input id="email" type="email" placeholder="admin@coopex.com.br"/>
+    <input id="pass" type="password" placeholder="Senha"/>
+    <button id="btnLogin">Entrar</button>
+  </div>
+  <div style="margin-left:auto;display:none" id="loggedArea">
+    <span id="who" class="small"></span>
+    <button id="btnLogout">Sair</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="actions">
+      <button id="btnLoad">Carregar do Firebase</button>
+      <button id="btnSave">Salvar no Firebase</button>
+      <button id="btnCopy">Copiar link público</button>
+      <span id="msg" class="small"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Perfil</h3>
+    <div class="row"><label>Nome</label><input id="name" type="text"></div>
+    <div class="row"><label>@handle</label><input id="handle" type="text"></div>
+    <div class="row"><label>Quadro de Aviso</label><textarea id="notice"></textarea></div>
+    <div class="row"><label>Mostrar aviso?</label><input id="showNotice" type="checkbox" checked></div>
+    <hr/>
+    <div class="row"><label>Logo topo (redonda)</label>
+      <div class="actions">
+        <input id="topLogoUrl" type="url" placeholder="https://... (opcional)">
+        <input id="topLogoFile" type="file" accept="image/*">
+      </div>
+    </div>
+    <div class="row"><label>Logo COOPEX (rodapé)</label>
+      <div class="actions">
+        <input id="brandCoopexUrl" type="url" placeholder="https://...">
+        <input id="brandCoopexFile" type="file" accept="image/*">
+      </div>
+    </div>
+    <div class="row"><label>Logo Kratos (rodapé)</label>
+      <div class="actions">
+        <input id="brandKratosUrl" type="url" placeholder="https://...">
+        <input id="brandKratosFile" type="file" accept="image/*">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Links (até 6)</h3>
+    <div id="links"></div>
+    <div class="actions"><button id="addLink">+ adicionar link</button></div>
+  </div>
+
+  <div class="card">
+    <h3>Vídeos</h3>
+    <div id="videos"></div>
+    <div class="actions"><button id="addVideo">+ adicionar vídeo</button></div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getStorage, ref as sref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA0nxRSImbagy4EbWgLD9_2Hr_PYtWVPnM",
+  authDomain: "kratossystemlinks.firebaseapp.com",
+  projectId: "kratossystemlinks",
+  storageBucket: "kratossystemlinks.firebasestorage.app", // se der erro, confira se é ...appspot.com
+  messagingSenderId: "721987032189",
+  appId: "1:721987032189:web:9a82953e128b9398c04d14"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const DOC_ID = "supervisaopainel";
+
+const $=s=>document.querySelector(s);
+const msg = (t,ok=true)=>{ const el=$('#msg'); el.textContent=t; el.className = ok?'small success':'small error'; };
+
+onAuthStateChanged(auth, u=>{
+  if(u){ $('#authArea').style.display='none'; $('#loggedArea').style.display='flex'; $('#who').textContent=u.email; }
+  else { $('#authArea').style.display='flex'; $('#loggedArea').style.display='none'; }
+});
+
+$('#btnLogin').addEventListener('click', async ()=>{
+  try{
+    const email=$('#email').value.trim(), pass=$('#pass').value;
+    await signInWithEmailAndPassword(auth,email,pass);
+    msg('Login OK.');
+  }catch(e){ console.error(e); msg('Falha no login: '+(e.message||e.code), false); }
+});
+
+$('#btnLogout').addEventListener('click', async ()=>{ await signOut(auth); msg('Saiu.'); });
+
+function emptyState(){
+  return {
+    profile:{ name:'', handle:'', topLogoUrl:'', brandCoopexUrl:'', brandKratosUrl:'', showNotice:true, notice:'' },
+    links:[],
+    videos:[]
+  };
+}
+let state = emptyState();
+
+function drawLinks(){
+  const host=$('#links'); host.innerHTML='';
+  state.links.forEach((l,idx)=>{
+    const row=document.createElement('div'); row.className='link-row';
+    row.innerHTML=`
+      <input type="text" placeholder="Rótulo" value="${l.label||''}">
+      <input type="url" placeholder="https://url" value="${l.url||''}">
+      <input type="text" placeholder="icon (wa/yt/link)" value="${l.icon||''}">
+      <div class="thumb"><input type="url" placeholder="iconUrl (https://...)" value="${l.iconUrl||''}"><input type="file" accept="image/*"></div>
+      <button data-del="${idx}">🗑</button>`;
+    // events
+    const [elLabel, elUrl, elIcon] = row.querySelectorAll('input');
+    const elIconUrl = row.querySelectorAll('input')[3];
+    const elFile = row.querySelectorAll('input')[4];
+    elLabel.addEventListener('input',e=>state.links[idx].label=e.target.value);
+    elUrl.addEventListener('input',e=>state.links[idx].url=e.target.value);
+    elIcon.addEventListener('input',e=>state.links[idx].icon=e.target.value);
+    elIconUrl.addEventListener('input',e=>state.links[idx].iconUrl=e.target.value);
+    elFile.addEventListener('change',async e=>{
+      const f=e.target.files?.[0]; if(!f) return;
+      try{
+        const path=`link-icons/${Date.now()}-${f.name}`;
+        const r=sref(storage,path);
+        await uploadBytes(r,f);
+        const url=await getDownloadURL(r);
+        state.links[idx].iconUrl=url; elIconUrl.value=url; msg('Logo do link enviada.');
+      }catch(err){ console.error(err); msg('Falha no upload do ícone', false); }
+    });
+    row.querySelector('button').addEventListener('click',()=>{ state.links.splice(idx,1); drawLinks(); });
+    host.append(row);
+  });
+}
+
+function drawVideos(){
+  const host=$('#videos'); host.innerHTML='';
+  state.videos.forEach((v,idx)=>{
+    const row=document.createElement('div'); row.className='link-row';
+    row.innerHTML=`
+      <input type="text" placeholder="Título" value="${v.title||''}">
+      <input type="text" placeholder="Tipo (yt/mp4url)" value="${v.type||'yt'}">
+      <input type="text" placeholder="YouTube ID ou URL MP4" value="${v.id||v.src||''}">
+      <input type="url" placeholder="Poster (opcional)" value="${v.poster||''}">
+      <button data-del="${idx}">🗑</button>`;
+    const [t, typ, ref, poster] = row.querySelectorAll('input');
+    t.addEventListener('input',e=>state.videos[idx].title=e.target.value);
+    typ.addEventListener('input',e=>state.videos[idx].type=e.target.value);
+    ref.addEventListener('input',e=>{
+      if((state.videos[idx].type||'yt')==='yt'){ state.videos[idx].id=e.target.value; delete state.videos[idx].src; }
+      else { state.videos[idx].src=e.target.value; delete state.videos[idx].id; }
+    });
+    poster.addEventListener('input',e=>state.videos[idx].poster=e.target.value);
+    row.querySelector('button').addEventListener('click',()=>{ state.videos.splice(idx,1); drawVideos(); });
+    host.append(row);
+  });
+}
+
+function fillForm(){
+  $('#name').value=state.profile.name||'';
+  $('#handle').value=state.profile.handle||'';
+  $('#notice').value=state.profile.notice||'';
+  $('#showNotice').checked=!!state.profile.showNotice;
+  $('#topLogoUrl').value=state.profile.topLogoUrl||'';
+  $('#brandCoopexUrl').value=state.profile.brandCoopexUrl||'';
+  $('#brandKratosUrl').value=state.profile.brandKratosUrl||'';
+  drawLinks(); drawVideos();
+}
+
+function pickAndUpload(inputFile, setUrl){
+  inputFile.addEventListener('change', async e=>{
+    const f=e.target.files?.[0]; if(!f) return;
+    try{
+      const path=`logos/${Date.now()}-${f.name}`;
+      const r=sref(storage,path);
+      await uploadBytes(r,f);
+      const url=await getDownloadURL(r);
+      setUrl(url); msg('Upload concluído.');
+    }catch(err){ console.error(err); msg('Falha no upload', false); }
+  });
+}
+
+$('#topLogoFile')  && pickAndUpload($('#topLogoFile'),  url=>{ $('#topLogoUrl').value=url; state.profile.topLogoUrl=url; });
+$('#brandCoopexFile')&&pickAndUpload($('#brandCoopexFile'),url=>{ $('#brandCoopexUrl').value=url; state.profile.brandCoopexUrl=url; });
+$('#brandKratosFile')&&pickAndUpload($('#brandKratosFile'),url=>{ $('#brandKratosUrl').value=url; state.profile.brandKratosUrl=url; });
+
+['name','handle','notice'].forEach(id=>$( '#'+id ).addEventListener('input',e=>{ state.profile[id]=e.target.value; }));
+$('#showNotice').addEventListener('change',e=>state.profile.showNotice=e.target.checked);
+['topLogoUrl','brandCoopexUrl','brandKratosUrl'].forEach(id=>$('#'+id).addEventListener('input',e=>{ state.profile[id]=e.target.value; }));
+
+$('#addLink').addEventListener('click',()=>{ state.links.push({label:'',url:'',icon:'link',iconUrl:''}); drawLinks(); });
+$('#addVideo').addEventListener('click',()=>{ state.videos.push({type:'yt',id:'',title:''}); drawVideos(); });
+
+$('#btnLoad').addEventListener('click', async ()=>{
+  try{
+    const snap = await getDoc(doc(db,'sites',DOC_ID));
+    state = snap.exists() ? snap.data() : emptyState();
+    // compat: se vier "profile.topLogo" de versões antigas
+    if(state.profile && state.profile.topLogo){ state.profile.topLogoUrl = state.profile.topLogo; delete state.profile.topLogo; }
+    fillForm(); msg('Dados carregados.');
+  }catch(e){ console.error(e); msg('Erro ao carregar: '+(e.message||e.code), false); }
+});
+
+$('#btnSave').addEventListener('click', async ()=>{
+  try{
+    const user = auth.currentUser;
+    if(!user){ msg('Entre antes de salvar.', false); return; }
+    // normaliza links (limpa vazios)
+    state.links = state.links.filter(l=> (l.label||'').trim() && (l.url||'').trim() );
+    await setDoc(doc(db,'sites',DOC_ID), state, { merge:true });
+    msg('Salvo com sucesso! ✅');
+  }catch(e){ console.error(e); msg('Erro ao salvar: '+(e.message||e.code), false); }
+});
+
+$('#btnCopy').addEventListener('click',()=>{
+  const url = location.origin + location.pathname.replace(/\/admin\.html$/,'/') ;
+  navigator.clipboard?.writeText(url);
+  msg('Link público copiado: '+url);
+});
+
+// carga inicial em branco
+state = emptyState(); fillForm();
+</script>
+</body>
+</html>
