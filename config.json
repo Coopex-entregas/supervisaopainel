@@ -2,39 +2,17 @@
   "profile": {
     "name": "Coopex Motofrete",
     "handle": "@coopex",
-    "topLogoUrl": "assets/logo-coopex.svg",
-    "brandCoopexUrl": "assets/logo-coopex.svg",
-    "brandKratosUrl": "assets/logo-kratos.svg",
+    "topLogoUrl": "",
+    "brandCoopexUrl": "",
+    "brandKratosUrl": "",
     "showNotice": true,
     "notice": "Plantão 24h. Segurança em primeiro lugar!"
   },
   "links": [
-    {
-      "label": "WhatsApp",
-      "url": "https://wa.me/5585999999999",
-      "icon": "wa"
-    },
-    {
-      "label": "Sistema 1",
-      "url": "https://sistema1.coopex.com.br",
-      "icon": "link"
-    },
-    {
-      "label": "Sistema 2",
-      "url": "https://sistema2.coopex.com.br",
-      "icon": "link"
-    },
-    {
-      "label": "YouTube",
-      "url": "https://youtube.com/@coopex",
-      "icon": "yt"
-    }
+    { "label": "Supervisão", "url": "", "icon": "link", "iconUrl": "" },
+    { "label": "Peninha",    "url": "", "icon": "link", "iconUrl": "" }
   ],
   "videos": [
-    {
-      "type": "yt",
-      "id": "dQw4w9WgXcQ",
-      "title": "Apresentação"
-    }
+    { "type": "mp4url", "src": "", "poster": "", "title": "Apresentação" }
   ]
 }
