@@ -3,51 +3,163 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="theme-color" content="#003399"/>
+<meta name="theme-color" content="#0a1a63"/>
 <title>COOPEX — Cartão</title>
+
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
+/* ========== THEME ========== */
 :root{
-  --brand:#003399; --brand-2:#4f8cff; --ink:#0b1838; --muted:#6073a8;
-  --bg-1:#fff; --bg-2:#f6f9ff; --line:#e2e9ff; --card:#fff; --glow:0 18px 48px rgba(0,51,153,.18), 0 4px 14px rgba(0,51,153,.10);
+  --brand:#003399;           /* azul royal */
+  --brand-2:#5bc0ff;         /* ciano */
+  --pink:#ff5bd6;
+  --violet:#7b5bff;
+  --ink:#0b1838;
+  --muted:#6d7aa8;
+  --line:#e3eaff;
+  --card:#ffffff;
+  --bg-1:#0b102e;
+  --bg-2:#0f1440;
+  --glow:0 24px 80px rgba(30,64,175,.45), 0 10px 30px rgba(30,64,175,.25);
 }
-*{box-sizing:border-box} html,body{margin:0}
-body{font-family:Inter,system-ui,Arial,sans-serif;color:var(--ink);min-height:100dvh;background:
-radial-gradient(1200px 800px at 10% -10%, #eaf0ff 0%, transparent 60%),linear-gradient(180deg,var(--bg-1),var(--bg-2))}
-.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#ffffffdd,#ffffffaa);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.topbar-inner{max-width:560px;margin:0 auto;padding:12px 14px;display:flex;align-items:center;gap:12px}
-.logo-badge{width:44px;height:44px;border-radius:50%;background:conic-gradient(from 130deg,#2563eb,var(--brand));display:grid;place-items:center;color:#fff;font-family:Orbitron,sans-serif;font-weight:700;letter-spacing:.4px;overflow:hidden;box-shadow:0 12px 28px rgba(0,51,153,.25)}
+
+/* Reset */
+*{box-sizing:border-box}
+html,body{margin:0}
+
+/* Futuristic background */
+body{
+  font-family:Inter,system-ui,Arial,sans-serif;
+  color:var(--ink);
+  min-height:100dvh;
+  background:
+    radial-gradient(1200px 800px at 10% -10%, rgba(96,165,250,.12) 0%, transparent 60%),
+    radial-gradient(1000px 600px at 90% -10%, rgba(236,72,153,.12) 0%, transparent 60%),
+    linear-gradient(180deg,#ffffff,#f6f9ff);
+}
+
+/* Topbar */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:linear-gradient(180deg,#ffffffee,#ffffffbb);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:600px; margin:0 auto; padding:12px 14px;
+  display:flex; align-items:center; gap:12px;
+}
+.logo-badge{
+  width:46px; height:46px; border-radius:50%;
+  background:radial-gradient(120% 120% at 20% 20%, #5bc0ff 0, #003399 60%);
+  display:grid; place-items:center; color:#fff;
+  font:700 16px/1 Orbitron, sans-serif; letter-spacing:.6px;
+  box-shadow:0 10px 26px rgba(0,51,153,.35);
+  overflow:hidden;
+}
 .logo-badge img{width:100%;height:100%;object-fit:cover;display:none}
-.app-title{font-family:Orbitron,sans-serif;font-weight:700;letter-spacing:.8px}
-.spacer{flex:1} .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:#eef3ff;border:1px solid var(--line);font-size:.9rem;color:#123;cursor:pointer}
-.wrap{max-width:560px;margin:18px auto 80px;padding:0 14px}
-.card{position:relative;border-radius:30px;overflow:hidden}
-.card::before{content:"";position:absolute;inset:-2px;background:linear-gradient(180deg,#ffffff,#e9f0ff);filter:blur(8px)}
-.card>.inner{position:relative;background:var(--card);border:1px solid var(--line);border-radius:30px;box-shadow:var(--glow);overflow:hidden}
-.hero{padding:32px 22px 20px;text-align:center;background:linear-gradient(180deg,#ffffff 0%, #f1f6ff 100%);position:relative}
-.moto-badge{width:128px;height:128px;border-radius:50%;margin:0 auto 12px;box-shadow:0 0 0 8px #fff,0 0 0 16px rgba(0,51,153,.12),0 20px 40px rgba(0,51,153,.35);overflow:hidden;background:radial-gradient(circle at 30% 30%, #4f8cff 0, #003399 70%);display:grid;place-items:center}
+.app-title{font:700 16px/1 Orbitron, sans-serif; letter-spacing:.8px; color:#101e5f}
+.spacer{flex:1}
+.chip{
+  display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  padding:8px 12px; border-radius:999px;
+  color:#0b1838; font-weight:700; font-size:.92rem;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,#eef5ff,#ffffff);
+  box-shadow:0 4px 12px rgba(30,64,175,.12);
+}
+
+/* Canvas */
+.wrap{max-width:600px; margin:20px auto 90px; padding:0 14px}
+.card{
+  position:relative; border-radius:28px; overflow:hidden;
+  border:1px solid var(--line); background:var(--card); box-shadow:var(--glow);
+}
+.hero{
+  padding:32px 22px 18px; text-align:center;
+  background:
+    radial-gradient(120% 120% at 30% 0%, rgba(91,192,255,.22) 0%, transparent 55%),
+    radial-gradient(120% 120% at 70% -20%, rgba(255,91,214,.20) 0%, transparent 55%),
+    linear-gradient(180deg,#ffffff 0%, #f2f6ff 100%);
+}
+
+/* Big round logo */
+.moto-badge{
+  width:128px; height:128px; border-radius:50%; margin:0 auto 14px;
+  background:radial-gradient(circle at 30% 30%, #5bc0ff 0, #003399 70%);
+  display:grid; place-items:center; overflow:hidden;
+  box-shadow:
+    0 0 0 8px #fff,
+    0 0 0 16px rgba(0,51,153,.14),
+    0 28px 60px rgba(0,51,153,.35);
+}
 .moto-badge img{width:100%;height:100%;object-fit:cover;display:none}
-.moto-fallback{width:64px;height:64px;color:#fff;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
-.name{font-weight:800;font-size:1.35rem;margin:6px 0 0} .handle{margin:.35rem 0 0;color:var(--muted)}
+.moto-fallback{width:66px;height:66px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.35))}
+
+.name{font-weight:900;font-size:1.45rem;margin:6px 0 0;color:#0b1838}
+.handle{margin:.35rem 0 0;color:var(--muted);font-weight:600}
+
+/* Notice */
 .notice{margin:16px 16px 0;background:linear-gradient(180deg,#f6f9ff,#ffffff);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 28px rgba(0,51,153,.08)}
-.notice-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px dashed var(--line);font-weight:800;letter-spacing:.3px}
-.notice-head .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#4f8cff,#003399);box-shadow:0 0 0 3px rgba(0,51,153,.12)}
+.notice-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px dashed var(--line);font-weight:900;letter-spacing:.3px}
+.notice-head .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#5bc0ff,#003399);box-shadow:0 0 0 3px rgba(0,51,153,.12)}
 .notice-body{padding:12px 14px}
+
+/* CTAs */
 .cta-list{padding:16px}
-.cta{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;text-decoration:none;color:#0b1838;font-weight:800;margin-bottom:12px;box-shadow:0 10px 26px rgba(0,51,153,.08)}
-.icon{width:22px;height:22px;display:grid;place-items:center;color:#003399}
-.icon img{width:22px;height:22px;object-fit:contain;border-radius:6px;display:block}
-.gallery{padding:0 16px 16px} .video-row{display:flex;gap:12px;overflow:auto} .video-thumb{min-width:220px;flex:0 0 220px;border-radius:16px;border:1px solid var(--line);overflow:hidden;background:#000;box-shadow:0 12px 28px rgba(0,0,0,.15)}
-.video-thumb img{width:100%;height:124px;object-fit:cover;display:block} .video-thumb .vt-title{padding:8px 10px;font-size:.92rem;background:#fff;font-weight:700}
-.footer{padding:18px 0 12px;text-align:center;color:var(--muted);font-size:.9rem}
+.cta{
+  --grad: linear-gradient(135deg, #5bc0ff, #7b5bff 60%, #ff5bd6);
+  position:relative;
+  display:flex; align-items:center; gap:12px;
+  text-decoration:none; color:#0b1838; font-weight:900;
+  border:1px solid var(--line);
+  border-radius:18px; padding:14px 16px; margin-bottom:12px;
+  background:#fff; box-shadow:0 16px 32px rgba(0,51,153,.12);
+  overflow:hidden;
+}
+.cta::after{
+  content:""; position:absolute; inset:0; border-radius:18px; opacity:.12;
+  background:var(--grad); transition:opacity .25s ease;
+}
+.cta:active{transform:translateY(1px) scale(.995)}
+.cta:hover::after{opacity:.22}
+
+.icon{width:26px;height:26px;display:grid;place-items:center;color:#003399}
+.icon img{width:26px;height:26px;object-fit:contain;border-radius:7px;display:block}
+
+/* Gallery */
+.gallery{padding:0 16px 16px}
+.video-row{display:flex;gap:12px;overflow:auto;scroll-snap-type:x mandatory}
+.video-thumb{scroll-snap-align:start;min-width:230px;flex:0 0 230px;border-radius:16px;border:1px solid var(--line);overflow:hidden;background:#000;box-shadow:0 12px 28px rgba(0,0,0,.15);cursor:pointer}
+.video-thumb img{width:100%;height:124px;object-fit:cover;display:block}
+.video-thumb .vt-title{padding:8px 10px;font-size:.92rem;background:#fff;font-weight:800}
+
+/* Footer */
+.footer{padding:20px 0 14px;text-align:center;color:var(--muted);font-size:.92rem}
 .credits{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
-.round-logo{width:64px;height:64px;border-radius:50%;background:#fff;border:1px solid var(--line);overflow:hidden;box-shadow:0 8px 20px rgba(0,51,153,.08)}
+.round-logo{width:66px;height:66px;border-radius:50%;background:#fff;border:1px solid var(--line);overflow:hidden;box-shadow:0 8px 20px rgba(0,51,153,.08)}
 .round-logo img{width:100%;height:100%;object-fit:cover}
-.madeby{color:#203a88;font-weight:800;letter-spacing:.3px}
+.madeby{color:#203a88;font-weight:900;letter-spacing:.3px}
+
+/* Helpers */
 .hide{display:none!important}
+
+/* Ripple click */
+.ripple{position:relative;overflow:hidden}
+.ripple span.fx{
+  position:absolute; border-radius:999px; pointer-events:none;
+  transform:translate(-50%,-50%); width:12px;height:12px; opacity:.35;
+  background:radial-gradient(circle at center, #fff 0%, rgba(91,192,255,.9) 35%, rgba(123,91,255,.8) 70%, transparent 72%);
+  animation:ripple .7s ease-out forwards;
+}
+@keyframes ripple{from{transform:translate(-50%,-50%) scale(.2)} to{transform:translate(-50%,-50%) scale(12); opacity:0}}
 </style>
 </head>
 <body>
+
+<!-- Topbar -->
 <header class="topbar">
   <div class="topbar-inner">
     <div class="logo-badge"><img id="logoSmall" alt=""><span>CO</span></div>
@@ -57,128 +169,173 @@ radial-gradient(1200px 800px at 10% -10%, #eaf0ff 0%, transparent 60%),linear-gr
   </div>
 </header>
 
+<!-- Card -->
 <main class="wrap">
   <section class="card">
-    <div class="inner">
-      <div class="hero">
-        <div class="moto-badge">
-          <img id="topLogo" alt="Logo principal">
-          <svg class="moto-fallback" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M3 14a8 8 0 0 1 8-8h2c2.7 0 5 2.3 5 5v1l2 2-2 1H14a5 5 0 0 1-5 3H7l-3-4Z" stroke="#fff"/>
-            <path d="M13 8h4l2 2" stroke="#dbeafe"/>
-          </svg>
-        </div>
-        <h2 class="name" id="name">Coopex Motofrete</h2>
-        <div class="handle" id="handle">@coopex</div>
+    <div class="hero">
+      <div class="moto-badge">
+        <img id="topLogo" alt="Logo principal">
+        <svg class="moto-fallback" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 14a8 8 0 0 1 8-8h2c2.7 0 5 2.3 5 5v1l2 2-2 1H14a5 5 0 0 1-5 3H7l-3-4Z" stroke="#fff"/>
+          <path d="M13 8h4l2 2" stroke="#dbeafe"/>
+        </svg>
       </div>
+      <h2 class="name" id="name">Coopex Motofrete</h2>
+      <div class="handle" id="handle">@coopex</div>
+    </div>
 
-      <div class="notice" id="noticeWrap">
-        <div class="notice-head"><span class="dot"></span> QUADRO DE AVISO</div>
-        <div class="notice-body" id="noticeText">Plantão 24h. Segurança em primeiro lugar!</div>
-      </div>
+    <!-- Aviso -->
+    <div class="notice" id="noticeWrap">
+      <div class="notice-head"><span class="dot"></span> QUADRO DE AVISO</div>
+      <div class="notice-body" id="noticeText">Plantão 24h. Segurança em primeiro lugar!</div>
+    </div>
 
-      <div class="cta-list" id="links"></div>
+    <!-- Links -->
+    <div class="cta-list" id="linkList"></div>
 
-      <div class="gallery hide" id="gallery">
-        <h4 style="margin:10px 16px">Mídia</h4>
-        <div class="video-row" id="videos"></div>
-      </div>
+    <!-- Galeria -->
+    <div class="gallery hide" id="gallery">
+      <h4 style="margin:10px 16px">Mídia</h4>
+      <div class="video-row" id="videos"></div>
+    </div>
 
-      <div class="footer">
-        <div class="credits">
-          <div class="round-logo"><img id="brandCoopex" alt="Logo COOPEX"></div>
-          <div class="madeby">Desenvolvido por <b>Kratos System</b></div>
-          <div class="round-logo"><img id="brandKratos" alt="Logo Kratos"></div>
-        </div>
+    <!-- Rodapé -->
+    <div class="footer">
+      <div class="credits">
+        <div class="round-logo"><img id="brandCoopex" alt="Logo COOPEX"></div>
+        <div class="madeby">Desenvolvido por <b>Kratos System</b></div>
+        <div class="round-logo"><img id="brandKratos" alt="Logo Kratos"></div>
       </div>
     </div>
   </section>
 </main>
 
-<!-- FALLBACK opcional dentro do index -->
+<!-- Fallback mínimo interno -->
 <script id="initial-config" type="application/json">
-{"profile":{"name":"Coopex Motofrete","handle":"@coopex","topLogoUrl":"","brandCoopexUrl":"","brandKratosUrl":"","showNotice":true,"notice":"Plantão 24h. Segurança em primeiro lugar!"},"links":[{"label":"WhatsApp","url":"","icon":"wa","iconUrl":""},{"label":"Sistema 1","url":"","icon":"link","iconUrl":""},{"label":"Sistema 2","url":"","icon":"link","iconUrl":""},{"label":"YouTube","url":"","icon":"yt","iconUrl":""}],"videos":[{"type":"yt","id":"dQw4w9WgXcQ","title":"Apresentação"}]}
+{"profile":{"name":"Coopex Motofrete","handle":"@coopex","topLogoUrl":"","brandCoopexUrl":"","brandKratosUrl":"","showNotice":true,"notice":"Plantão 24h. Segurança em primeiro lugar!"},"links":[{"label":"WhatsApp","url":"https://wa.me/5585999999999","icon":"wa"},{"label":"Sistema 1","url":"https://sistema1.coopex.com.br","icon":"link"},{"label":"Sistema 2","url":"https://sistema2.coopex.com.br","icon":"link"},{"label":"YouTube","url":"https://youtube.com/@coopex","icon":"yt"}],"videos":[{"type":"yt","id":"dQw4w9WgXcQ","title":"Apresentação"}]}
 </script>
 
+<!-- Script -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+/* Firebase (bucket correto) */
 const firebaseConfig = {
   apiKey: "AIzaSyA0nxRSImbagy4EbWgLD9_2Hr_PYtWVPnM",
   authDomain: "kratossystemlinks.firebaseapp.com",
   projectId: "kratossystemlinks",
-  storageBucket: "kratossystemlinks.firebasestorage.app",
+  storageBucket: "kratossystemlinks.appspot.com", // <- appspot.com
   messagingSenderId: "721987032189",
   appId: "1:721987032189:web:9a82953e128b9398c04d14"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const DOC_ID = "supervisaopainel"; // <- onde o admin salva
+const DOC_ID = "supervisaopainel";
 
+/* Helpers */
 const $=s=>document.querySelector(s);
+
+/* Ícones padrão + fallback para favicon do site */
 const icons={
-  wa:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M20.5 12a8.5 8.5 0 1 1-15.7 4.6L3 21l4.6-1.8A8.5 8.5 0 0 1 20.5 12Z" stroke="currentColor" stroke-width="1.5"/><path d="M8.8 9.4c-.1-.3.1-.6.4-.8l.5-.3c.2-.1.5 0 .6.1l.7 1a.7.7 0 0 1 0 .7c-.2.2-.3.4-.2.6.2.6.9 1.5 1.7 2 .2.1.5.1.7-.1l.6-.5c.2-.1.5-.1.7 0l.9.4c.3.1.4.4.3.7l-.2.6c-.1.3-.4.6-.8.7-1.6.4-3.5-.3-5-1.7-1.5-1.5-2.1-3.3-1.8-4.8.1-.3.4-.7.7-.9Z" fill="currentColor"/></svg>`,
-  yt:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M22 12s0-3.5-.4-4.9c-.2-.8-.9-1.5-1.7-1.7C17.5 5 12 5 12 5s5.5 0 7.9.4c.8-.2 1.5-.9 1.7-1.7.4-1.4.4-4.9.4-4.9Z" stroke="currentColor"/><path d="M10 9.75v4.5L14.5 12 10 9.75Z" fill="currentColor"/></svg>`,
-  link:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M10 14 14 10" stroke="currentColor" stroke-width="1.7"/><path d="M7.5 16.5a4 4 0 0 1 0-5.7l1.8-1.8a4 4 0 0 1 5.7 0" stroke="currentColor" stroke-width="1.7"/><path d="M16.5 7.5a4 4 0 0 1 0 5.7l-1.8 1.8a4 4 0 0 1-5.7 0" stroke="currentColor" stroke-width="1.7"/></svg>`
+  wa:`<svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M20.5 12a8.5 8.5 0 1 1-15.7 4.6L3 21l4.6-1.8A8.5 8.5 0 0 1 20.5 12Z" stroke="currentColor" stroke-width="1.6"/><path d="M8.8 9.4c-.1-.3.1-.6.4-.8l.5-.3c.2-.1.5 0 .6.1l.7 1a.7.7 0 0 1 0 .7c-.2.2-.3.4-.2.6.2.6.9 1.5 1.7 2 .2.1.5.1.7-.1l.6-.5c.2-.1.5-.1.7 0l.9.4c.3.1.4.4.3.7l-.2.6c-.1.3-.4.6-.8.7-1.6.4-3.5-.3-5-1.7-1.5-1.5-2.1-3.3-1.8-4.8.1-.3.4-.7.7-.9Z" fill="currentColor"/></svg>`,
+  yt:`<svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M22 12s0-3.5-.4-4.9c-.2-.8-.9-1.5-1.7-1.7C17.5 5 12 5 12 5s5.5 0 7.9.4c.8-.2 1.5-.9 1.7-1.7.4-1.4.4-4.9.4-4.9Z" stroke="currentColor"/><path d="M10 9.75v4.5L14.5 12 10 9.75Z" fill="currentColor"/></svg>`,
+  link:`<svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M10 14 14 10" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 16.5a4 4 0 0 1 0-5.7l1.8-1.8a4 4 0 0 1 5.7 0" stroke="currentColor" stroke-width="1.8"/><path d="M16.5 7.5a4 4 0 0 1 0 5.7l-1.8 1.8a4 4 0 0 1-5.7 0" stroke="currentColor" stroke-width="1.8"/></svg>`
 };
+const favicon = (url) => {
+  try{
+    const u = new URL(url);
+    return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=64`;
+  }catch{ return ""; }
+};
+
+/* UI */
+function ripple(el, e){
+  const span=document.createElement('span'); span.className='fx';
+  const rect=el.getBoundingClientRect();
+  span.style.left=(e.clientX-rect.left)+'px';
+  span.style.top=(e.clientY-rect.top)+'px';
+  el.append(span);
+  span.addEventListener('animationend',()=>span.remove());
+}
 
 function apply(cfg){
   const p=cfg.profile||{};
+  // topo
   $('#name').textContent=p.name||'';
   $('#handle').textContent=p.handle||'';
   const tl=$('#topLogo'), fb=document.querySelector('.moto-fallback');
-  if(p.topLogoUrl){ tl.src=p.topLogoUrl; tl.style.display='block'; fb.style.display='none'; } else { tl.style.display='none'; fb.style.display='block'; }
+  if(p.topLogoUrl){ tl.src=p.topLogoUrl; tl.style.display='block'; fb.style.display='none'; }
+  else { tl.style.display='none'; fb.style.display='block'; }
+
+  // logos rodapé
   if(p.brandCoopexUrl) $('#brandCoopex').src=p.brandCoopexUrl;
   if(p.brandKratosUrl) $('#brandKratos').src=p.brandKratosUrl;
 
-  const noticeWrap=$('#noticeWrap');
-  if(p.showNotice && (p.notice||'').trim()!==''){ $('#noticeText').textContent=p.notice; noticeWrap.classList.remove('hide'); }
-  else { noticeWrap.classList.add('hide'); }
+  // aviso
+  const nwrap=$('#noticeWrap');
+  if(p.showNotice && (p.notice||'').trim()){ $('#noticeText').textContent=p.notice; nwrap.classList.remove('hide'); }
+  else nwrap.classList.add('hide');
 
-  const host=$('#links'); host.innerHTML='';
+  // links
+  const host=$('#linkList'); host.innerHTML='';
   (cfg.links||[]).forEach(l=>{
     if(!l.label || !(l.url||'').trim()) return;
-    const a=document.createElement('a'); a.className='cta'; a.href=l.url; a.target='_blank'; a.rel='noopener';
+    const a=document.createElement('a'); a.className='cta ripple'; a.href=l.url; a.target='_blank'; a.rel='noopener';
     const i=document.createElement('span'); i.className='icon';
-    if(l.iconUrl){ const im=new Image(); im.src=l.iconUrl; im.alt=''; i.append(im); }
-    else { i.innerHTML = icons[l.icon] || icons.link; }
+
+    if(l.iconUrl){ // logo enviada
+      const im=new Image(); im.src=l.iconUrl; im.alt=''; i.append(im);
+    }else{
+      const autoFav = favicon(l.url);
+      if(autoFav){ const im=new Image(); im.src=autoFav; im.alt=''; i.append(im); }
+      else { i.innerHTML = icons[l.icon] || icons.link; }
+    }
+
     const t=document.createElement('span'); t.textContent=l.label;
     a.append(i,t); host.append(a);
+    a.addEventListener('click', (e)=>ripple(a,e));
   });
 
-  const vids=$('#videos'), gw=$('#gallery'); vids.innerHTML='';
+  // vídeos
+  const gw=$('#gallery'), vids=$('#videos'); vids.innerHTML='';
   const arr=cfg.videos||[];
-  if(!arr.length){ gw.classList.add('hide'); }else{ gw.classList.remove('hide');
+  if(!arr.length){ gw.classList.add('hide'); }
+  else{
+    gw.classList.remove('hide');
     arr.forEach(v=>{
-      const card=document.createElement('div'); card.className='video-thumb';
+      const card=document.createElement('div'); card.className='video-thumb ripple';
       if(v.type==='yt'){ const img=new Image(); img.src=`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`; card.append(img); }
       else if(v.type==='mp4url'){ const img=new Image(); img.src=v.poster||''; card.append(img); }
       const tt=document.createElement('div'); tt.className='vt-title'; tt.textContent=v.title||''; card.append(tt);
-      card.addEventListener('click',()=>{ if(v.type==='yt') window.open(`https://www.youtube.com/watch?v=${v.id}`,'_blank'); else if(v.src) { const w=window.open(); w.document.write(`<video src="${v.src}" controls autoplay style="position:fixed;inset:0;width:100%;height:100%;background:#000;object-fit:contain"></video>`);} });
+      card.addEventListener('click',(e)=>{ ripple(card,e);
+        if(v.type==='yt') window.open(`https://www.youtube.com/watch?v=${v.id}`,'_blank');
+        else if(v.src){ const w=window.open(); w.document.write(`<video src="${v.src}" controls autoplay style="position:fixed;inset:0;width:100%;height:100%;background:#000;object-fit:contain"></video>`); }
+      });
       vids.append(card);
     });
   }
 }
 
+/* Load: Firestore → config.json → fallback interno */
 async function loadAll(){
-  // 1) tenta Firestore
+  // Firestore
   try{
-    const snap = await getDoc(doc(db,'sites',DOC_ID));
+    const snap=await getDoc(doc(db,'sites',DOC_ID));
     if(snap.exists()){ apply(snap.data()); return; }
-  }catch(e){ /* segue */ }
-  // 2) tenta config.json
+  }catch(e){ /* continua */ }
+
+  // config.json
   try{
     const r=await fetch('config.json',{cache:'no-store'});
     if(r.ok){ apply(await r.json()); return; }
-  }catch(e){ /* segue */ }
-  // 3) bloco interno
-  try{
-    apply(JSON.parse(document.querySelector('#initial-config').textContent));
-  }catch(e){}
+  }catch(e){ /* continua */ }
+
+  // Fallback
+  try{ apply(JSON.parse(document.querySelector('#initial-config').textContent)); }catch{}
 }
 
+/* Share */
 document.getElementById('btnShare').addEventListener('click',()=>{
   const data={title: document.title, url: location.href};
   if(navigator.share) navigator.share(data).catch(()=>navigator.clipboard?.writeText(location.href));
