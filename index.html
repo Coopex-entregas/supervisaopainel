@@ -1,294 +1,191 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#003399" />
-  <title>Gerenciador Coopex – Cartão Futurista</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --brand:#003399;        /* azul-royal COOPEX */
-      --brand-2:#4f8cff;      /* azul claro */
-      --ink:#0b1838;          /* texto principal */
-      --muted:#6073a8;        /* texto secundário */
-      --bg-1:#ffffff;         /* branco predominante */
-      --bg-2:#f6f9ff;         /* leve azul */
-      --line:#e2e9ff;         /* linhas sutis */
-      --card:#ffffff;
-      --radius:26px;
-      --glow:0 18px 48px rgba(0,51,153,.18), 0 4px 14px rgba(0,51,153,.10);
-    }
-
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0}
-    html{height:auto;min-height:100%}
-    body{
-      font-family:Inter,system-ui,Arial,sans-serif;color:var(--ink);min-height:100dvh;overflow-y:auto;touch-action:pan-y;
-      background:radial-gradient(1200px 800px at 10% -10%, #eaf0ff 0%, transparent 60%),
-                 linear-gradient(180deg,var(--bg-1),var(--bg-2));
-      position:relative;
-    }
-    body::before{ /* grade leve futurista */
-      content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;
-      background-image:linear-gradient(transparent 95%, rgba(0,51,153,.06) 95%),
-                       linear-gradient(90deg, transparent 95%, rgba(0,51,153,.06) 95%);
-      background-size:12px 12px;
-    }
-
-    /* Topo */
-    .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#ffffffcc,#ffffffaa);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-    .topbar-inner{max-width:560px;margin:0 auto;padding:12px 14px;display:flex;align-items:center;gap:12px}
-    .logo-badge{width:44px;height:44px;border-radius:50%;background:conic-gradient(from 130deg at 50% 50%, #2563eb, var(--brand));display:grid;place-items:center;color:#fff;font-family:Orbitron,sans-serif;font-weight:700;letter-spacing:.4px;overflow:hidden;box-shadow:0 12px 28px rgba(0,51,153,.25)}
-    .logo-badge img{width:100%;height:100%;object-fit:cover;display:none}
-    .app-title{font-family:Orbitron,sans-serif;font-weight:700;letter-spacing:.8px}
-    .spacer{flex:1}
-    .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:#eef3ff;border:1px solid var(--line);font-size:.9rem;color:#123;cursor:pointer}
-
-    /* Conteúdo */
-    .wrap{max-width:560px;margin:18px auto 80px;padding:0 14px}
-
-    /* Cartão principal com aro de luz */
-    .card{position:relative;border-radius:30px;overflow:hidden}
-    .card::before{content:"";position:absolute;inset:-2px;background:linear-gradient(180deg,#ffffff,#e9f0ff);filter:blur(8px)}
-    .card > .inner{position:relative;background:var(--card);border:1px solid var(--line);border-radius:30px;box-shadow:var(--glow);overflow:hidden}
-
-    .hero{padding:32px 22px 20px;text-align:center;background:linear-gradient(180deg,#ffffff 0%, #f1f6ff 100%);position:relative}
-    .hero::after{ /* faixas inclinadas motofrete */
-      content:"";position:absolute;inset:auto -30% -40% -30%;height:160px;background:repeating-linear-gradient(135deg, rgba(0,51,153,.08) 0 14px, rgba(0,51,153,.0) 14px 28px);
-    }
-    /* LOGO SUPERIOR (GRANDE E REDONDA) */
-    .moto-badge{width:128px;height:128px;border-radius:50%;margin:0 auto 12px;position:relative;box-shadow:0 0 0 8px #fff, 0 0 0 16px rgba(0,51,153,.12), 0 20px 40px rgba(0,51,153,.35);overflow:hidden;background:radial-gradient(circle at 30% 30%, #4f8cff 0, #003399 70%);display:grid;place-items:center}
-    .moto-badge img{width:100%;height:100%;object-fit:cover;display:none}
-    .moto-fallback{width:64px;height:64px;color:#fff;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
-    .name{font-weight:800;font-size:1.35rem;margin:6px 0 0}
-    .handle{margin:.35rem 0 0;color:var(--muted)}
-
-    /* Quadro de Aviso */
-    .notice{margin:16px 16px 0;background:linear-gradient(180deg,#f6f9ff,#ffffff);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 28px rgba(0,51,153,.08)}
-    .notice-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px dashed var(--line);font-weight:800;letter-spacing:.3px}
-    .notice-head .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#4f8cff,#003399);box-shadow:0 0 0 3px rgba(0,51,153,.12)}
-    .notice-body{padding:12px 14px;color:var(--ink)}
-
-    /* Ações */
-    .cta-list{padding:16px}
-    .cta{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;text-decoration:none;color:#0b1838;font-weight:800;margin-bottom:12px;box-shadow:0 10px 26px rgba(0,51,153,.08)}
-    .cta:active{transform:scale(.99)}
-    .icon{width:22px;height:22px;display:grid;place-items:center;color:var(--brand)}
-
-    /* Galeria */
-    .gallery{padding:0 16px 16px}
-    .gallery h4{margin:10px 0}
-    .video-row{display:flex;gap:12px;overflow:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
-    .video-thumb{min-width:220px;flex:0 0 220px;border-radius:16px;border:1px solid var(--line);overflow:hidden;background:#000;box-shadow:0 12px 28px rgba(0,0,0,.15)}
-    .video-thumb img{width:100%;height:124px;object-fit:cover;display:block}
-    .video-thumb .vt-title{padding:8px 10px;font-size:.92rem;background:#fff;font-weight:700}
-
-    .footer{padding:18px 0 12px;text-align:center;color:var(--muted);font-size:.9rem}
-    .credits{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
-    .round-logo{width:64px;height:64px;border-radius:50%;background:#fff;border:1px solid var(--line);overflow:hidden;box-shadow:0 8px 20px rgba(0,51,153,.08)}
-    .round-logo img{width:100%;height:100%;object-fit:cover}
-    .madeby{color:#203a88;font-weight:800;letter-spacing:.3px}
-    .tagline{margin-top:10px;color:var(--muted)}
-
-    /* SOMENTE LEITURA — esconde qualquer UI de edição (se existir no HTML) */
-    .fabs,
-    #themeChip,
-    #modalEdit, #modalMore { display:none !important; }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#003399"/>
+<title>COOPEX — Cartão</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#003399; --brand-2:#4f8cff; --ink:#0b1838; --muted:#6073a8;
+  --bg-1:#fff; --bg-2:#f6f9ff; --line:#e2e9ff; --card:#fff; --glow:0 18px 48px rgba(0,51,153,.18), 0 4px 14px rgba(0,51,153,.10);
+}
+*{box-sizing:border-box} html,body{margin:0}
+body{font-family:Inter,system-ui,Arial,sans-serif;color:var(--ink);min-height:100dvh;background:
+radial-gradient(1200px 800px at 10% -10%, #eaf0ff 0%, transparent 60%),linear-gradient(180deg,var(--bg-1),var(--bg-2))}
+.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#ffffffdd,#ffffffaa);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:560px;margin:0 auto;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.logo-badge{width:44px;height:44px;border-radius:50%;background:conic-gradient(from 130deg,#2563eb,var(--brand));display:grid;place-items:center;color:#fff;font-family:Orbitron,sans-serif;font-weight:700;letter-spacing:.4px;overflow:hidden;box-shadow:0 12px 28px rgba(0,51,153,.25)}
+.logo-badge img{width:100%;height:100%;object-fit:cover;display:none}
+.app-title{font-family:Orbitron,sans-serif;font-weight:700;letter-spacing:.8px}
+.spacer{flex:1} .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:#eef3ff;border:1px solid var(--line);font-size:.9rem;color:#123;cursor:pointer}
+.wrap{max-width:560px;margin:18px auto 80px;padding:0 14px}
+.card{position:relative;border-radius:30px;overflow:hidden}
+.card::before{content:"";position:absolute;inset:-2px;background:linear-gradient(180deg,#ffffff,#e9f0ff);filter:blur(8px)}
+.card>.inner{position:relative;background:var(--card);border:1px solid var(--line);border-radius:30px;box-shadow:var(--glow);overflow:hidden}
+.hero{padding:32px 22px 20px;text-align:center;background:linear-gradient(180deg,#ffffff 0%, #f1f6ff 100%);position:relative}
+.moto-badge{width:128px;height:128px;border-radius:50%;margin:0 auto 12px;box-shadow:0 0 0 8px #fff,0 0 0 16px rgba(0,51,153,.12),0 20px 40px rgba(0,51,153,.35);overflow:hidden;background:radial-gradient(circle at 30% 30%, #4f8cff 0, #003399 70%);display:grid;place-items:center}
+.moto-badge img{width:100%;height:100%;object-fit:cover;display:none}
+.moto-fallback{width:64px;height:64px;color:#fff;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+.name{font-weight:800;font-size:1.35rem;margin:6px 0 0} .handle{margin:.35rem 0 0;color:var(--muted)}
+.notice{margin:16px 16px 0;background:linear-gradient(180deg,#f6f9ff,#ffffff);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 28px rgba(0,51,153,.08)}
+.notice-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px dashed var(--line);font-weight:800;letter-spacing:.3px}
+.notice-head .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#4f8cff,#003399);box-shadow:0 0 0 3px rgba(0,51,153,.12)}
+.notice-body{padding:12px 14px}
+.cta-list{padding:16px}
+.cta{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;text-decoration:none;color:#0b1838;font-weight:800;margin-bottom:12px;box-shadow:0 10px 26px rgba(0,51,153,.08)}
+.icon{width:22px;height:22px;display:grid;place-items:center;color:#003399}
+.icon img{width:22px;height:22px;object-fit:contain;border-radius:6px;display:block}
+.gallery{padding:0 16px 16px} .video-row{display:flex;gap:12px;overflow:auto} .video-thumb{min-width:220px;flex:0 0 220px;border-radius:16px;border:1px solid var(--line);overflow:hidden;background:#000;box-shadow:0 12px 28px rgba(0,0,0,.15)}
+.video-thumb img{width:100%;height:124px;object-fit:cover;display:block} .video-thumb .vt-title{padding:8px 10px;font-size:.92rem;background:#fff;font-weight:700}
+.footer{padding:18px 0 12px;text-align:center;color:var(--muted);font-size:.9rem}
+.credits{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.round-logo{width:64px;height:64px;border-radius:50%;background:#fff;border:1px solid var(--line);overflow:hidden;box-shadow:0 8px 20px rgba(0,51,153,.08)}
+.round-logo img{width:100%;height:100%;object-fit:cover}
+.madeby{color:#203a88;font-weight:800;letter-spacing:.3px}
+.hide{display:none!important}
+</style>
 </head>
 <body>
-  <!-- Topo -->
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="logo-badge" id="logoBadge"><img id="logoImg" alt="Logo Coopex"><span>CO</span></div>
-      <div class="app-title">COOPEX • CARTÃO</div>
-      <div class="spacer"></div>
-      <div id="btnShare" class="chip">🔗 compartilhar</div>
-    </div>
-  </header>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo-badge"><img id="logoSmall" alt=""><span>CO</span></div>
+    <div class="app-title">GERENCIADOR COOPEX</div>
+    <div class="spacer"></div>
+    <div id="btnShare" class="chip">🔗 compartilhar</div>
+  </div>
+</header>
 
-  <main class="wrap">
-    <section class="card">
-      <div class="inner">
-        <div class="hero">
-          <!-- LOGO SUPERIOR GRANDE (redonda) -->
-          <div class="moto-badge" aria-label="Logo principal">
-            <img id="topLogoImg" alt="Logo principal">
-            <!-- fallback se não tiver logo -->
-            <svg class="moto-fallback" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M3 14a8 8 0 0 1 8-8h2c2.7 0 5 2.3 5 5v1l2 2-2 1H14a5 5 0 0 1-5 3H7l-3-4Z" stroke="#fff"/>
-              <path d="M13 8h4l2 2" stroke="#dbeafe"/>
-            </svg>
-          </div>
-          <h2 class="name" id="profileName">Coopex Motofrete</h2>
-          <div class="handle" id="profileHandle">@coopex</div>
+<main class="wrap">
+  <section class="card">
+    <div class="inner">
+      <div class="hero">
+        <div class="moto-badge">
+          <img id="topLogo" alt="Logo principal">
+          <svg class="moto-fallback" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 14a8 8 0 0 1 8-8h2c2.7 0 5 2.3 5 5v1l2 2-2 1H14a5 5 0 0 1-5 3H7l-3-4Z" stroke="#fff"/>
+            <path d="M13 8h4l2 2" stroke="#dbeafe"/>
+          </svg>
         </div>
+        <h2 class="name" id="name">Coopex Motofrete</h2>
+        <div class="handle" id="handle">@coopex</div>
+      </div>
 
-        <!-- Quadro de Aviso -->
-        <div class="notice hide" id="noticeBox">
-          <div class="notice-head"><span class="dot"></span> QUADRO DE AVISO</div>
-          <div class="notice-body" id="noticeText"></div>
-        </div>
+      <div class="notice" id="noticeWrap">
+        <div class="notice-head"><span class="dot"></span> QUADRO DE AVISO</div>
+        <div class="notice-body" id="noticeText">Plantão 24h. Segurança em primeiro lugar!</div>
+      </div>
 
-        <!-- Links -->
-        <div class="cta-list" id="ctaList"></div>
+      <div class="cta-list" id="links"></div>
 
-        <!-- Galeria -->
-        <div class="gallery hide" id="galleryWrap">
-          <h4>Mídia</h4>
-          <div class="video-row" id="videoRow"></div>
-        </div>
+      <div class="gallery hide" id="gallery">
+        <h4 style="margin:10px 16px">Mídia</h4>
+        <div class="video-row" id="videos"></div>
+      </div>
 
-        <!-- Rodapé -->
-        <div class="footer">
-          <div class="credits">
-            <div class="round-logo" id="brandLogoCoopex"><img id="brandImgCoopex" alt="Logo Coopex"/></div>
-            <div class="madeby">Desenvolvido por <b>Kratos System</b></div>
-            <div class="round-logo" id="brandLogoKratos"><img id="brandImgKratos" alt="Logo Kratos"/></div>
-          </div>
-          <div class="tagline">Orgulho de ser <b>COOPEX</b> — desde 2002</div>
+      <div class="footer">
+        <div class="credits">
+          <div class="round-logo"><img id="brandCoopex" alt="Logo COOPEX"></div>
+          <div class="madeby">Desenvolvido por <b>Kratos System</b></div>
+          <div class="round-logo"><img id="brandKratos" alt="Logo Kratos"></div>
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+</main>
 
-<script>
-/* ===== util ===== */
-const $=(s,r=document)=>r.querySelector(s);
-const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+<!-- FALLBACK opcional dentro do index -->
+<script id="initial-config" type="application/json">
+{"profile":{"name":"Coopex Motofrete","handle":"@coopex","topLogoUrl":"","brandCoopexUrl":"","brandKratosUrl":"","showNotice":true,"notice":"Plantão 24h. Segurança em primeiro lugar!"},"links":[{"label":"WhatsApp","url":"","icon":"wa","iconUrl":""},{"label":"Sistema 1","url":"","icon":"link","iconUrl":""},{"label":"Sistema 2","url":"","icon":"link","iconUrl":""},{"label":"YouTube","url":"","icon":"yt","iconUrl":""}],"videos":[{"type":"yt","id":"dQw4w9WgXcQ","title":"Apresentação"}]}
+</script>
 
-/* ===== estado (somente leitura) ===== */
-let state={
-  profile:{
-    name:'Coopex Motofrete',
-    handle:'@coopex',
-    topLogo:null,
-    brandCoopex:null,
-    brandKratos:null,
-    showNotice:true,
-    notice:'Operação normal hoje. Segurança em primeiro lugar!'
-  },
-  // ícones suportados: wa, ig, fb, yt, link
-  links:[
-    {label:'WhatsApp', url:'', icon:'wa'},
-    {label:'Sistema 1', url:'', icon:'link'},
-    {label:'Sistema 2', url:'', icon:'link'},
-    {label:'YouTube',  url:'', icon:'yt'}
-  ],
-  // vídeos: {type:'yt', id, title} | {type:'mp4url', src, poster?, title}
-  videos:[]
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA0nxRSImbagy4EbWgLD9_2Hr_PYtWVPnM",
+  authDomain: "kratossystemlinks.firebaseapp.com",
+  projectId: "kratossystemlinks",
+  storageBucket: "kratossystemlinks.firebasestorage.app",
+  messagingSenderId: "721987032189",
+  appId: "1:721987032189:web:9a82953e128b9398c04d14"
 };
 
-/* ===== icons inline ===== */
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const DOC_ID = "supervisaopainel"; // <- onde o admin salva
+
+const $=s=>document.querySelector(s);
 const icons={
   wa:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M20.5 12a8.5 8.5 0 1 1-15.7 4.6L3 21l4.6-1.8A8.5 8.5 0 0 1 20.5 12Z" stroke="currentColor" stroke-width="1.5"/><path d="M8.8 9.4c-.1-.3.1-.6.4-.8l.5-.3c.2-.1.5 0 .6.1l.7 1a.7.7 0 0 1 0 .7c-.2.2-.3.4-.2.6.2.6.9 1.5 1.7 2 .2.1.5.1.7-.1l.6-.5c.2-.1.5-.1.7 0l.9.4c.3.1.4.4.3.7l-.2.6c-.1.3-.4.6-.8.7-1.6.4-3.5-.3-5-1.7-1.5-1.5-2.1-3.3-1.8-4.8.1-.3.4-.7.7-.9Z" fill="currentColor"/></svg>`,
-  ig:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></svg>`,
-  fb:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M13.5 21v-8h2.3l.4-3h-2.7V8.1c0-.9.3-1.5 1.6-1.5h1.2V4.1c-.2 0 -.9-.1-1.8-.1-2.1 0-3.6 1.3-3.6 3.7V10H9v3h2.9v8h1.6Z" fill="currentColor"/></svg>`,
   yt:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M22 12s0-3.5-.4-4.9c-.2-.8-.9-1.5-1.7-1.7C17.5 5 12 5 12 5s5.5 0 7.9.4c.8-.2 1.5-.9 1.7-1.7.4-1.4.4-4.9.4-4.9Z" stroke="currentColor"/><path d="M10 9.75v4.5L14.5 12 10 9.75Z" fill="currentColor"/></svg>`,
   link:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M10 14 14 10" stroke="currentColor" stroke-width="1.7"/><path d="M7.5 16.5a4 4 0 0 1 0-5.7l1.8-1.8a4 4 0 0 1 5.7 0" stroke="currentColor" stroke-width="1.7"/><path d="M16.5 7.5a4 4 0 0 1 0 5.7l-1.8 1.8a4 4 0 0 1-5.7 0" stroke="currentColor" stroke-width="1.7"/></svg>`
 };
 
-/* ===== render ===== */
-function renderProfile(){
-  $('#profileName').textContent=state.profile.name||'—';
-  $('#profileHandle').textContent=state.profile.handle||'';
-  const top=$('#topLogoImg'); const fb=$('.moto-fallback');
-  if(state.profile.topLogo){ top.src=state.profile.topLogo; top.style.display='block'; fb.style.display='none'; }
-  else { top.removeAttribute('src'); top.style.display='none'; fb.style.display='block'; }
-  const c=$('#brandImgCoopex'); const k=$('#brandImgKratos');
-  if(state.profile.brandCoopex){ c.src=state.profile.brandCoopex; } else { c.removeAttribute('src'); }
-  if(state.profile.brandKratos){ k.src=state.profile.brandKratos; } else { k.removeAttribute('src'); }
-}
+function apply(cfg){
+  const p=cfg.profile||{};
+  $('#name').textContent=p.name||'';
+  $('#handle').textContent=p.handle||'';
+  const tl=$('#topLogo'), fb=document.querySelector('.moto-fallback');
+  if(p.topLogoUrl){ tl.src=p.topLogoUrl; tl.style.display='block'; fb.style.display='none'; } else { tl.style.display='none'; fb.style.display='block'; }
+  if(p.brandCoopexUrl) $('#brandCoopex').src=p.brandCoopexUrl;
+  if(p.brandKratosUrl) $('#brandKratos').src=p.brandKratosUrl;
 
-function renderNotice(){
-  const box=$('#noticeBox'); const txt=$('#noticeText');
-  if(state.profile.showNotice && state.profile.notice){ box.classList.remove('hide'); txt.textContent=state.profile.notice; }
-  else { box.classList.add('hide'); txt.textContent=''; }
-}
+  const noticeWrap=$('#noticeWrap');
+  if(p.showNotice && (p.notice||'').trim()!==''){ $('#noticeText').textContent=p.notice; noticeWrap.classList.remove('hide'); }
+  else { noticeWrap.classList.add('hide'); }
 
-function renderLinks(){
-  const host=$('#ctaList'); host.innerHTML='';
-  state.links.filter(l=>l.label && (l.url||'').trim()!=='').slice(0,4).forEach(l=>{
+  const host=$('#links'); host.innerHTML='';
+  (cfg.links||[]).forEach(l=>{
+    if(!l.label || !(l.url||'').trim()) return;
     const a=document.createElement('a'); a.className='cta'; a.href=l.url; a.target='_blank'; a.rel='noopener';
-    const i=document.createElement('span'); i.className='icon'; i.innerHTML=icons[l.icon]||icons.link;
+    const i=document.createElement('span'); i.className='icon';
+    if(l.iconUrl){ const im=new Image(); im.src=l.iconUrl; im.alt=''; i.append(im); }
+    else { i.innerHTML = icons[l.icon] || icons.link; }
     const t=document.createElement('span'); t.textContent=l.label;
     a.append(i,t); host.append(a);
   });
-}
 
-function ytThumb(id){ return `https://img.youtube.com/vi/${id}/hqdefault.jpg`; }
-function parseYT(url){
-  try{
-    const u=new URL(url);
-    if(u.hostname.includes('youtu.be')) return u.pathname.slice(1);
-    if(u.searchParams.get('v')) return u.searchParams.get('v');
-    const m=u.pathname.match(/\/embed\/([\w-]+)/); if(m) return m[1];
-  }catch{}
-  return null;
-}
-
-function renderVideos(){
-  const wrap=$('#galleryWrap'); const row=$('#videoRow'); row.innerHTML='';
-  if(!state.videos.length){ wrap.classList.add('hide'); return; }
-  wrap.classList.remove('hide');
-  state.videos.forEach(v=>{
-    const card=document.createElement('div'); card.className='video-thumb';
-    if(v.type==='yt'){
-      const img=document.createElement('img'); img.src=ytThumb(v.id); img.alt='thumb'; card.append(img);
-    }else{
-      const img=document.createElement('img'); img.src=(v.poster||'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180"><rect width="100%" height="100%" fill="#000"/></svg>')); img.alt='thumb'; card.append(img);
-    }
-    const title=document.createElement('div'); title.className='vt-title'; title.textContent=v.title|| (v.type==='yt'?'YouTube':'Vídeo'); card.append(title);
-    card.addEventListener('click',()=>openVideo(v)); row.append(card);
-  });
-}
-
-function openVideo(v){
-  const w=window.open();
-  if(v.type==='yt'){
-    w.document.write(`<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${v.id}" frameborder="0" allowfullscreen style="position:fixed;inset:0"></iframe>`);
-  } else if(v.type==='mp4url'){
-    w.document.write(`<video src="${v.src}" controls autoplay style="position:fixed;inset:0;width:100%;height:100%;background:#000;object-fit:contain" ${v.poster?`poster='${v.poster}'`:''}></video>`);
+  const vids=$('#videos'), gw=$('#gallery'); vids.innerHTML='';
+  const arr=cfg.videos||[];
+  if(!arr.length){ gw.classList.add('hide'); }else{ gw.classList.remove('hide');
+    arr.forEach(v=>{
+      const card=document.createElement('div'); card.className='video-thumb';
+      if(v.type==='yt'){ const img=new Image(); img.src=`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`; card.append(img); }
+      else if(v.type==='mp4url'){ const img=new Image(); img.src=v.poster||''; card.append(img); }
+      const tt=document.createElement('div'); tt.className='vt-title'; tt.textContent=v.title||''; card.append(tt);
+      card.addEventListener('click',()=>{ if(v.type==='yt') window.open(`https://www.youtube.com/watch?v=${v.id}`,'_blank'); else if(v.src) { const w=window.open(); w.document.write(`<video src="${v.src}" controls autoplay style="position:fixed;inset:0;width:100%;height:100%;background:#000;object-fit:contain"></video>`);} });
+      vids.append(card);
+    });
   }
 }
 
-function renderAll(){ renderProfile(); renderNotice(); renderLinks(); renderVideos(); }
-
-/* ===== carregar SEMPRE do config.json (sem localStorage, sem login) ===== */
-async function loadFromConfig(){
+async function loadAll(){
+  // 1) tenta Firestore
   try{
-    const res=await fetch('config.json',{cache:'no-store'});
-    if(res.ok){
-      const cfg=await res.json();
-      if(cfg.profile){
-        const p=cfg.profile;
-        state.profile.name = p.name ?? state.profile.name;
-        state.profile.handle = p.handle ?? state.profile.handle;
-        state.profile.topLogo = p.topLogoUrl ?? state.profile.topLogo;
-        state.profile.brandCoopex = p.brandCoopexUrl ?? state.profile.brandCoopex;
-        state.profile.brandKratos = p.brandKratosUrl ?? state.profile.brandKratos;
-        state.profile.showNotice = (typeof p.showNotice==='boolean') ? p.showNotice : state.profile.showNotice;
-        state.profile.notice = p.notice ?? state.profile.notice;
-      }
-      if(Array.isArray(cfg.links))  state.links  = cfg.links;
-      if(Array.isArray(cfg.videos)) state.videos = cfg.videos;
-    }
-  }catch(e){
-    // se falhar, segue com o fallback padrão do 'state'
-    console.warn('Falha ao carregar config.json; usando defaults.', e);
-  }
-  renderAll();
+    const snap = await getDoc(doc(db,'sites',DOC_ID));
+    if(snap.exists()){ apply(snap.data()); return; }
+  }catch(e){ /* segue */ }
+  // 2) tenta config.json
+  try{
+    const r=await fetch('config.json',{cache:'no-store'});
+    if(r.ok){ apply(await r.json()); return; }
+  }catch(e){ /* segue */ }
+  // 3) bloco interno
+  try{
+    apply(JSON.parse(document.querySelector('#initial-config').textContent));
+  }catch(e){}
 }
 
-/* ===== share ===== */
-$('#btnShare')?.addEventListener('click',()=>{
-  if(navigator.share){ navigator.share({title: state.profile.name || 'Coopex', text: state.profile.handle || '', url: location.href}).catch(()=>{}); }
-  else { navigator.clipboard?.writeText(location.href); }
+document.getElementById('btnShare').addEventListener('click',()=>{
+  const data={title: document.title, url: location.href};
+  if(navigator.share) navigator.share(data).catch(()=>navigator.clipboard?.writeText(location.href));
+  else navigator.clipboard?.writeText(location.href);
 });
 
-/* boot */
-window.addEventListener('DOMContentLoaded', loadFromConfig);
+loadAll();
 </script>
 </body>
 </html>
